@@ -20,6 +20,7 @@ class CoolUtil
 		'Easy',
 		'Normal',
 		'Hard'
+		'Erect'
 	];
 	public static var defaultDifficulty:String = 'Normal'; //The chart that has no suffix and starting difficulty on Freeplay/Story Mode
 
@@ -53,11 +54,8 @@ class CoolUtil
 	public static function coolTextFile(path:String):Array<String>
 	{
 		var daList:Array<String> = [];
-		#if sys
+		
 		if(FileSystem.exists(path)) daList = File.getContent(path).trim().split('\n');
-		#else
-		if(Assets.exists(path)) daList = Assets.getText(path).trim().split('\n');
-		#end
 
 		for (i in 0...daList.length)
 		{
@@ -116,16 +114,9 @@ class CoolUtil
 
 	//uhhhh does this even work at all? i'm starting to doubt
 	public static function precacheSound(sound:String, ?library:String = null):Void {
-		precacheSoundFile(Paths.sound(sound, library));
-	}
-
-	public static function precacheMusic(sound:String, ?library:String = null):Void {
-		precacheSoundFile(Paths.music(sound, library));
-	}
-
-	private static function precacheSoundFile(file:Dynamic):Void {
-		if (Assets.exists(file, SOUND) || Assets.exists(file, MUSIC))
-			Assets.getSound(file, true);
+		if(!Assets.cache.hasSound(Paths.sound(sound, library))) {
+			FlxG.sound.cache(Paths.sound(sound, library));
+		}
 	}
 
 	public static function browserLoad(site:String) {
